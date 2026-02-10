@@ -10,12 +10,12 @@ from sklearn.metrics import classification_report
 
 
 def News_Detection_Module():
-    file_path = Path(__file__).parent / "news.csv"
+    file_path = Path(__file__).parent / "training_data.csv"
 
     try:
         df = pd.read_csv(file_path, low_memory=False)
     except FileNotFoundError:
-        print("Error: news.csv not found in project folder.")
+        print("Error: training_data.csv not found in project folder.")
         exit()
 
     df = df[['title', 'text', 'label']]
