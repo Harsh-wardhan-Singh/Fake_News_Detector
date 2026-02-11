@@ -1,6 +1,6 @@
 import pandas as pd
 from pathlib import Path
-
+import re
 
 BASE_DIR = Path(__file__).parent
 DATASETS_DIR = BASE_DIR / "datasets"
@@ -12,12 +12,30 @@ REALFAKENEWS_FILE = DATASETS_DIR / "RealFakeNews.csv"
 
 OUTPUT_FILE = DATASETS_DIR / "Big_training_data.csv"
 
+# Headline-focused dataset limits
+MIN_TEXT_LENGTH = 10
+MAX_TEXT_LENGTH = 250
 
-def clean_text_column(df):
-    df["text"] = df["text"].astype(str)
-    df["text"] = df["text"].str.replace(r"\s+", " ", regex=True)
-    df["text"] = df["text"].str.strip()
-    return df
+
+def clean_raw_text(text: str) -> str:
+    if pd.isna(text):
+        return ""
+
+    text = str(text)
+
+    # Remove HTML tags
+    text = re.sub(r"<.*?>", " ", text)
+
+    # Remove URLs
+    text = re.sub(r"http\S+|www\S+", " ", text)
+
+    # Remove strange encoding artifacts
+    text = text.replace("Â", " ").replace("Ã", " ").replace("â", " ")
+
+    # Collapse multiple spaces/newlines
+    text = re.sub(r"\s+", " ", text)
+
+    return text.strip()
 
 
 def normalize_labels(df):
@@ -33,23 +51,57 @@ def normalize_labels(df):
     return df
 
 
+def filter_by_text_length(df):
+    df["text_length"] = df["text"].apply(len)
+
+    before = len(df)
+
+    df = df[df["text_length"] >= MIN_TEXT_LENGTH]
+    df = df[df["text_length"] <= MAX_TEXT_LENGTH]
+
+    after = len(df)
+
+    print("\nText Length Filtering Report:")
+    print(f"Before: {before}")
+    print(f"After: {after}")
+    print(f"Removed: {before - after}")
+    print(f"Min length allowed: {MIN_TEXT_LENGTH}")
+    print(f"Max length allowed: {MAX_TEXT_LENGTH}")
+
+    df = df.drop(columns=["text_length"])
+    return df
+
+
+def remove_duplicates(df):
+    before = len(df)
+
+    df = df.drop_duplicates()
+    after_exact = len(df)
+
+    df = df.drop_duplicates(subset=["text"])
+    after_text = len(df)
+
+    print("\nDuplicate Removal Report:")
+    print(f"Rows before: {before}")
+    print(f"After removing exact duplicates: {after_exact} (removed {before - after_exact})")
+    print(f"After removing duplicate text: {after_text} (removed {after_exact - after_text})")
+
+    return df
+
+
 def load_fake_true_dataset(file_path, label_value):
     df = pd.read_csv(file_path, low_memory=False)
 
-    if "title" not in df.columns or "text" not in df.columns:
-        raise ValueError(f"{file_path.name} must contain 'title' and 'text' columns!")
+    if "title" not in df.columns:
+        raise ValueError(f"{file_path.name} must contain 'title' column!")
 
-    df["title"] = df["title"].fillna("").astype(str)
-    df["text"] = df["text"].fillna("").astype(str)
+    # USE ONLY HEADLINES
+    df["text"] = df["title"].fillna("").astype(str).apply(clean_raw_text)
 
-    df["text"] = df["title"] + " " + df["text"]
     df["label"] = label_value
-
     df = df[["text", "label"]]
 
-    df = clean_text_column(df)
     df = normalize_labels(df)
-
     df = df[df["text"].str.strip() != ""]
 
     return df
@@ -64,9 +116,9 @@ def load_training_data(file_path):
     df = df[["text", "label"]]
     df = df.dropna(subset=["text", "label"])
 
-    df = clean_text_column(df)
-    df = normalize_labels(df)
+    df["text"] = df["text"].astype(str).apply(clean_raw_text)
 
+    df = normalize_labels(df)
     df = df[df["text"].str.strip() != ""]
     df = df[df["label"].isin(["REAL", "FAKE"])]
 
@@ -76,15 +128,15 @@ def load_training_data(file_path):
 def load_realfakenews(file_path):
     df = pd.read_csv(file_path, low_memory=False)
 
-    possible_text_cols = ["text", "content", "article", "news"]
+    possible_title_cols = ["title", "headline", "headlines","text"]
     possible_label_cols = ["label", "labels", "class"]
 
-    text_col = None
+    title_col = None
     label_col = None
 
-    for col in possible_text_cols:
+    for col in possible_title_cols:
         if col in df.columns:
-            text_col = col
+            title_col = col
             break
 
     for col in possible_label_cols:
@@ -92,43 +144,23 @@ def load_realfakenews(file_path):
             label_col = col
             break
 
-    if text_col is None or label_col is None:
+    if title_col is None or label_col is None:
         raise ValueError(
-            f"{file_path.name} does not contain expected columns.\n"
+            f"{file_path.name} does not contain expected headline/label columns.\n"
             f"Found columns: {list(df.columns)}"
         )
 
-    df = df[[text_col, label_col]].copy()
-    df.columns = ["text", "label"]
+    # ONLY USE HEADLINES
+    df["text"] = df[title_col].fillna("").astype(str).apply(clean_raw_text)
+    df["label"] = df[label_col].astype(str)
+
+    df = df[["text", "label"]].copy()
 
     df = df.dropna(subset=["text", "label"])
-
-    df = clean_text_column(df)
     df = normalize_labels(df)
 
     df = df[df["text"].str.strip() != ""]
     df = df[df["label"].isin(["REAL", "FAKE"])]
-
-    return df
-
-
-def remove_duplicates(df):
-    before = len(df)
-
-    # Remove exact duplicates of full rows
-    df = df.drop_duplicates()
-
-    after_exact = len(df)
-
-    # Remove duplicates based on text only
-    df = df.drop_duplicates(subset=["text"])
-
-    after_text = len(df)
-
-    print("\nDuplicate Removal Report:")
-    print(f"Rows before: {before}")
-    print(f"After removing exact duplicates: {after_exact} (removed {before - after_exact})")
-    print(f"After removing duplicate text: {after_text} (removed {after_exact - after_text})")
 
     return df
 
@@ -148,7 +180,7 @@ def main():
     training_df = load_training_data(TRAINING_FILE)
     print("training_data.csv loaded:", training_df.shape)
 
-    print("Loading RealFakeNews.csv...")
+    print("Loading RealFakeNews.csv (HEADLINES ONLY)...")
     realfake_df = load_realfakenews(REALFAKENEWS_FILE)
     print("RealFakeNews.csv loaded:", realfake_df.shape)
 
@@ -157,23 +189,18 @@ def main():
     print("\nMerging all datasets...")
     combined = pd.concat(all_dfs, ignore_index=True)
 
-    print("Combined size before final cleaning:", combined.shape)
-
     combined = combined.dropna(subset=["text", "label"])
-    combined = clean_text_column(combined)
     combined = normalize_labels(combined)
 
     combined = combined[combined["label"].isin(["REAL", "FAKE"])]
     combined = combined[combined["text"].str.strip() != ""]
 
-    # Duplicate removal
+    combined = filter_by_text_length(combined)
     combined = remove_duplicates(combined)
 
-    # Shuffle dataset
     combined = combined.sample(frac=1, random_state=42).reset_index(drop=True)
 
     print("\nFinal dataset size:", combined.shape)
-
     print("\nFinal label distribution:")
     print(combined["label"].value_counts())
 
