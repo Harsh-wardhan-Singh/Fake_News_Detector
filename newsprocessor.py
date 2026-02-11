@@ -1,52 +1,63 @@
-import numpy as np
+import re
 import pandas as pd
-import itertools
-from pathlib import Path
-from sklearn.model_selection import train_test_split
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.linear_model import PassiveAggressiveClassifier
-from sklearn.metrics import accuracy_score, confusion_matrix
-from sklearn.metrics import classification_report
+import spacy
+from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS
 
 
-def News_Detection_Module():
-    file_path = Path(__file__).parent / "training_data.csv"
+# Load spaCy model (install: python -m spacy download en_core_web_sm)
+nlp = spacy.load("en_core_web_sm", disable=["parser", "ner"])
 
-    try:
-        df = pd.read_csv(file_path, low_memory=False)
-    except FileNotFoundError:
-        print("Error: training_data.csv not found in project folder.")
-        exit()
 
-    df = df[['title', 'text', 'label']]
-    df = df.dropna(subset=['text', 'label']).reset_index(drop=True)
+def clean_text(text: str) -> str:
+    if pd.isna(text):
+        return ""
 
-    df['text'] = df['text'].astype(str)
-    df['label'] = df['label'].astype(str)
+    text = str(text)
 
-    df = df[df['text'].str.strip() != ""]
-    df = df[df['label'].str.strip() != ""]
+    # 1) Lowercase (Case normalization)
+    text = text.lower()
 
-    x_train, x_test, y_train, y_test = train_test_split(
-    df['text'], df['label'],
-    test_size=0.2,
-    random_state=7,
-    )
+    # 2) Remove URLs
+    text = re.sub(r"http\S+|www\S+", "", text)
 
-    tfidf_vectorizer = TfidfVectorizer(
-    stop_words='english',
-    max_df=0.7,
-    min_df=2,
-    ngram_range=(1,2)
-    )
+    # 3) Remove HTML tags
+    text = re.sub(r"<.*?>", "", text)
 
-    tfidf_train = tfidf_vectorizer.fit_transform(x_train)
-    tfidf_test = tfidf_vectorizer.transform(x_test)
+    # 4) Remove punctuation + special characters
+    text = re.sub(r"[^a-zA-Z\s]", "", text)
 
-    pac = PassiveAggressiveClassifier(max_iter=50)
-    pac.fit(tfidf_train, y_train)
+    # 5) Remove extra spaces
+    text = re.sub(r"\s+", " ", text).strip()
 
-    y_pred = pac.predict(tfidf_test)
+    # 6) Lemmatization + Stopword removal
+    doc = nlp(text)
 
-    score = accuracy_score(y_test, y_pred)
-    print(f'Accuracy: {round(score*100,2)}%')
+    cleaned_words = []
+    for token in doc:
+        lemma = token.lemma_.strip()
+
+        if lemma and lemma not in ENGLISH_STOP_WORDS and len(lemma) > 2:
+            cleaned_words.append(lemma)
+
+    return " ".join(cleaned_words)
+
+
+def preprocess_dataframe(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Cleans text column and returns cleaned dataframe.
+    """
+    df = df.copy()
+
+    # Drop missing
+    df = df.dropna(subset=["text", "label"])
+
+    # Apply cleaning
+    df["text"] = df["text"].apply(clean_text)
+
+    # Remove empty rows after cleaning
+    df = df[df["text"].str.strip() != ""]
+
+    # Reset index
+    df = df.reset_index(drop=True)
+
+    return df

@@ -1,4 +1,5 @@
 import joblib
+import math
 from pathlib import Path
 
 
@@ -27,14 +28,48 @@ vectorizer = joblib.load(VECTORIZER_PATH)
 print("Latest model and vectorizer loaded successfully!")
 
 
+def sigmoid(x):
+    """Convert decision score into confidence-like probability"""
+    return 1 / (1 + math.exp(-x))
+
+
+def classify_confidence(confidence: float):
+    """
+    confidence is between 0 and 1
+    """
+
+    if confidence >= 0.85:
+        return "Verified Real / Highly Reliable"
+
+    elif 0.60 <= confidence < 0.85:
+        return "Likely Real"
+
+    elif 0.40 <= confidence < 0.60:
+        return "Mixed Signals"
+
+    elif 0.15 <= confidence < 0.40:
+        return "Likely Fake"
+
+    else:
+        return "Highly Suspicious / Fake"
+
+
 def predict_news(text: str):
     if text is None or text.strip() == "":
-        return "ERROR: Empty input"
+        return "ERROR: Empty input", 0.0
 
     text_vector = vectorizer.transform([text])
-    prediction = model.predict(text_vector)
 
-    return prediction[0]
+    # Model raw decision score
+    decision_score = model.decision_function(text_vector)[0]
+
+    # Convert to confidence score (0 to 1)
+    confidence = sigmoid(decision_score)
+
+    # Classify using confidence ranges
+    result_label = classify_confidence(confidence)
+
+    return result_label, confidence
 
 
 if __name__ == "__main__":
@@ -49,6 +84,8 @@ if __name__ == "__main__":
             print("Exiting...")
             break
 
-        result = predict_news(user_input)
-        print("\nPrediction:", result)
+        label, confidence = predict_news(user_input)
+
+        print("\nPrediction:", label)
+        print(f"Confidence Score: {round(confidence * 100, 2)}%")
         print("-" * 40)

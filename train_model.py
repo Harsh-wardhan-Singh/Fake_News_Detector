@@ -4,6 +4,7 @@ import joblib
 import pandas as pd
 from datetime import datetime
 from pathlib import Path
+from newsprocessor import preprocess_dataframe
 
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -34,6 +35,7 @@ if not DATA_FILE.exists():
     exit()
 
 df = pd.read_csv(DATA_FILE, low_memory=False)
+df = preprocess_dataframe(df)
 
 required_cols = {"text", "label"}
 if not required_cols.issubset(df.columns):
