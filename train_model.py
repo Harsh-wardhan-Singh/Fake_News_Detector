@@ -1,6 +1,7 @@
 import os
 import json
 import joblib
+import time
 import pandas as pd
 from datetime import datetime
 from pathlib import Path
@@ -12,7 +13,7 @@ from sklearn.linear_model import PassiveAggressiveClassifier
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 
 BASE_DIR = Path(__file__).parent
-DATA_FILE = BASE_DIR / "datasets" / "training_data.csv"
+DATA_FILE = BASE_DIR / "datasets" / "Big_training_data.csv"
 
 MODELS_DIR = BASE_DIR / "models"
 MODELS_DIR.mkdir(exist_ok=True)
@@ -28,6 +29,10 @@ METADATA_FILE = MODELS_DIR / "model_metadata.json"
 TEST_SIZE = 0.2
 RANDOM_STATE = 7
 MIN_ACCURACY_TO_REPLACE = 0.0  
+
+start_time = time.time()
+
+print("\n[INFO] Training started...")
 
 
 if not DATA_FILE.exists():
@@ -80,12 +85,15 @@ tfidf_vectorizer = TfidfVectorizer(
     ngram_range=(1, 2)
 )
 
+print("[STEP 1/3] TF-IDF Vectorizing...")
 tfidf_train = tfidf_vectorizer.fit_transform(x_train)
 tfidf_test = tfidf_vectorizer.transform(x_test)
-
+print("[STEP 1/3] Done.")
 
 model = PassiveAggressiveClassifier(max_iter=50)
+print("[STEP 2/3] Training model...")
 model.fit(tfidf_train, y_train)
+print("[STEP 2/3] Done.")
 
 
 y_pred = model.predict(tfidf_test)
@@ -165,3 +173,13 @@ else:
     print("\nNew model did NOT beat the old model.")
     print("Latest model NOT replaced.")
     print(f"Best accuracy remains: {round(old_best_accuracy * 100, 2)}%")
+
+end_time = time.time()
+elapsed = end_time - start_time
+
+minutes = int(elapsed // 60)
+seconds = elapsed % 60
+
+print("\n====================================")
+print(f"[DONE] Total Time Taken: {minutes} min {seconds:.2f} sec")
+print("====================================\n")
