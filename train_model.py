@@ -12,7 +12,7 @@ from sklearn.linear_model import PassiveAggressiveClassifier
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 
 BASE_DIR = Path(__file__).parent
-DATA_FILE = BASE_DIR / "training_data.csv"
+DATA_FILE = BASE_DIR / "datasets" / "training_data.csv"
 
 MODELS_DIR = BASE_DIR / "models"
 MODELS_DIR.mkdir(exist_ok=True)
