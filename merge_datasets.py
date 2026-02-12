@@ -172,9 +172,9 @@ def main():
     fake_df = load_fake_true_dataset(FAKE_FILE, "FAKE")
     print("Fake.csv loaded:", fake_df.shape)
 
-    print("Loading True.csv...")
-    true_df = load_fake_true_dataset(TRUE_FILE, "REAL")
-    print("True.csv loaded:", true_df.shape)
+    # print("Loading True.csv...")
+    # true_df = load_fake_true_dataset(TRUE_FILE, "REAL")
+    # print("True.csv loaded:", true_df.shape)
 
     print("Loading training_data.csv...")
     training_df = load_training_data(TRAINING_FILE)
@@ -184,7 +184,7 @@ def main():
     realfake_df = load_realfakenews(REALFAKENEWS_FILE)
     print("RealFakeNews.csv loaded:", realfake_df.shape)
 
-    all_dfs.extend([fake_df, true_df, training_df, realfake_df])
+    all_dfs.extend([fake_df, training_df, realfake_df]) #true_df
 
     print("\nMerging all datasets...")
     combined = pd.concat(all_dfs, ignore_index=True)

@@ -91,5 +91,5 @@ if __name__ == "__main__":
 
         print("\nPrediction:", confidence_label)
         print("Model Label:", predicted_label)
-        print(f"Confidence (Real): {round(confidence, 4)}")
+        print(f"Confidence: {round(confidence, 4)}")
         print("-" * 40)
