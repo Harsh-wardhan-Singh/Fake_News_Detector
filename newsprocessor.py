@@ -61,3 +61,4 @@ def preprocess_dataframe(df: pd.DataFrame) -> pd.DataFrame:
     df = df.reset_index(drop=True)
 
     return df
+

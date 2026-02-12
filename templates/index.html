@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Fake News Detector</title>
 
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
   <!-- Bootstrap -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
@@ -32,19 +34,22 @@
   <section class="hero text-center">
   
     <h1 class="hero-title">Fake News Detector</h1>
-    <p class="hero-subtitle"> TODO: Insert Short Catch phrase here</p>
+    <p class="hero-subtitle">Truth Check in Seconds.</p>
 
     <form action="/" method="POST" class="search-form mx-auto" autocomplete="off">
         <input type="text" name="user_input" class="form-control hero-input"
-       placeholder="Paste headline or article..." required
+       placeholder="Paste article headline" required
        autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
         <button type="submit" class="btn hero-btn">Detect</button>
     </form>
 
     {% if result %}
-        <div class="result-box mt-4">
-        <strong>Result:</strong> {{ result }}
-        </div>
+    <div class="result-box">
+        <h2>Prediction Result</h2>
+        <p><b>Verdict:</b> {{ result.verdict }}</p>
+        <p><b>Label:</b> {{ result.label }}</p>
+        <p><b>Confidence:</b> {{ result.confidence }}%</p>
+    </div>
     {% endif %}
     </section>
 
@@ -54,12 +59,46 @@
 
     <div class="about-card shadow-card mb-4">
       <h2>About This Project</h2>
-      <p>Write your explanation here...</p>
+      <p>In today’s world, misinformation spreads faster than ever due to online platforms and social media. This can cause panic, confusion, and false beliefs among people.
+
+This project is an AI-powered Fake News Detection System that uses Machine Learning and Natural Language Processing (NLP) techniques to analyze news text. The input is cleaned and preprocessed before being classified using a trained model.
+
+The model was trained on a large dataset containing thousands of real and fake news samples, allowing it to recognize patterns commonly found in misinformation.
+
+Although the system is not 100% perfect and should not be trusted blindly, it has achieved strong performance results:
+
+Accuracy: 93.8%
+
+Recall: 0.92
+
+F1 Score: 0.94
+
+The prediction system uses a TF-IDF Vectorizer along with a LinearSVC model for classification. Earlier versions of the project used a Passive Aggressive Classifier, but it was replaced due to lower accuracy and performance.
+
+The website provides a clean and simple interface where users can enter a headline or news text into the search bar and instantly receive:
+
+A Prediction Label (REAL / FAKE)
+
+A Confidence Score
+
+A Reliability Category
+
+This project aims to promote awareness, encourage fact-checking, and help reduce the spread of misinformation using modern AI technology.
+      </p>
     </div>
 
     <div class="about-card shadow-card">
       <h2>About Me</h2>
-      <p>Write your info here...</p>
+      <p>Hello! I’m Harsh Wardhan Singh, a Computer Science student who enjoys building real-world projects and exploring new technologies.
+
+I built this project while learning about Supervised Machine Learning models, and it also gave me the opportunity to improve my skills in web development. Designing and building the website was a fun challenge, especially since it was my first time creating a complete working ML-based web application.
+
+This project took time to complete due to several challenges, such as dataset bias and the need to replace the original Passive Aggressive model because of low accuracy and F1 score. However, after experimenting, improving preprocessing, and tuning the training pipeline, I successfully completed the system with much stronger results.
+
+If you’d like to connect with me, feel free to check out my socials linked on the website.
+
+Thank you for using my model!
+      </p>
         </div>
 
         </div>
@@ -70,15 +109,15 @@
   <h2 class="mb-4">Contact Me</h2>
 
   <div class="social-links d-flex justify-content-center gap-4 mt-3">
-    <a href="https://linkedin.com" target="_blank" class="social-btn linked">
+    <a href="https://linkedin.com/in/harsh-wardhan-singh-a57aab2ab?" target="_blank" class="social-btn linked">
       <i class="fa-brands fa-linkedin-in"></i>
     </a>
 
-    <a href="https://github.com" target="_blank" class="social-btn git">
+    <a href="https://github.com/Harsh-wardhan-Singh" target="_blank" class="social-btn git">
       <i class="fa-brands fa-github"></i>
     </a>
 
-    <a href="https://instagram.com" target="_blank" class="social-btn insta">
+    <a href="https://www.instagram.com/_harshh.0_0" target="_blank" class="social-btn insta">
       <i class="fa-brands fa-instagram"></i>
     </a>
   </div>

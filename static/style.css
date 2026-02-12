@@ -10,6 +10,13 @@
 html {
   scroll-behavior: smooth;
 }
+body {
+  font-family: "Inter", sans-serif;
+}
+p {
+  font-size: 1.05rem;
+  line-height: 1.8;
+}
 
 /* Global body theme */
 body.light-theme {
@@ -103,6 +110,7 @@ body.light-theme .hero::before {
   box-shadow: 0 6px 18px rgba(0,0,0,0.2);
 }
 .hero-title {
+  font-family: "Playfair Display", serif;
   font-size: 3.5rem;
   font-weight: 900;
   letter-spacing: 2px;
@@ -153,6 +161,11 @@ body.light-theme .about-card {
 .about-section {
   transition: background 0.3s ease;
   padding: 60px 0;
+}
+.about-card h2,
+.contact h2 {
+  font-family: "Playfair Display", serif;
+  font-weight: 800;
 }
 
 /* Contact styles */
@@ -225,7 +238,7 @@ body.dark-theme .about-card {
   color: white;
 }
 body.light-theme .about-card h2 {
-  color: #b22222;
+  color: #02d9ff;
 }
 
 body.dark-theme .about-card h2 {

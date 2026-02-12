@@ -1,4 +1,3 @@
-# app.py
 from flask import Flask, render_template, request
 from main import process_input  # import your function
 

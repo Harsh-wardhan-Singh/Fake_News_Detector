@@ -1,5 +1,6 @@
 import joblib
 from pathlib import Path
+from newsprocessor import clean_text
 
 
 BASE_DIR = Path(__file__).parent
@@ -51,6 +52,8 @@ def classify_confidence(confidence: float):
 def predict_news(text: str):
     if text is None or text.strip() == "":
         return "ERROR: Empty input", "UNKNOWN", 0.0
+    
+    text = clean_text(text)
 
     text_vector = vectorizer.transform([text])
 
@@ -70,9 +73,9 @@ def predict_news(text: str):
     predicted_label = model.predict(text_vector)[0]
 
     # Confidence label (Likely Real/Fake etc.)
-    confidence_label = classify_confidence(confidence_real)
+    # confidence_label = classify_confidence(confidence_real)
 
-    return confidence_label, predicted_label, confidence_real
+    return predicted_label, confidence_real #confidence_label
 
 
 if __name__ == "__main__":
@@ -87,9 +90,9 @@ if __name__ == "__main__":
             print("Exiting...")
             break
 
-        confidence_label, predicted_label, confidence = predict_news(user_input)
+        predicted_label, confidence = predict_news(user_input) #confidence label
 
-        print("\nPrediction:", confidence_label)
+        # print("\nPrediction:", confidence_label)
         print("Model Label:", predicted_label)
         print(f"Confidence: {round(confidence, 4)}")
         print("-" * 40)
