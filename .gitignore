@@ -1,5 +1,6 @@
 .venv 
 .vscode
 __pycache__
-models
 datasets/
+!models/fake_news_model_latest.pkl
+!models/tfidf_vectorizer_latest.pkl

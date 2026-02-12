@@ -1,0 +1,7 @@
+{
+    "best_accuracy": 0.944,
+    "trained_on_rows": 6250,
+    "timestamp": "2026-02-10_19-19-56",
+    "latest_model": "fake_news_model_latest.pkl",
+    "latest_vectorizer": "tfidf_vectorizer_latest.pkl"
+}
