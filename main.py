@@ -4,10 +4,12 @@
 
 import newsprocessor
 
-def main():
-    newsprocessor.News_Detection_Module()
+def process_input(se):
+
+    return se[::-1]
 
     
 if __name__ == "__main__":
-    main()
+    search = input("Enter the Headline: ")
+    print(process_input(search))
     
