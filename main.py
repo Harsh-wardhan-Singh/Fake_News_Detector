@@ -7,8 +7,8 @@ def format_result(label, confidence):
 
     
     if confidence >= 0.85:
-            verdict = "Highly Reliable"
-    elif confidence >= 0.60:
+            verdict = "Highly Reliable (Most likely REAL)"
+    elif confidence >= 0.60 and confidence < 0.85:
             verdict = "Likely Real "
     elif confidence >= 0.50 and confidence < 0.60:
             verdict = "Uncertain (but leaning towards REAL)"
@@ -17,7 +17,7 @@ def format_result(label, confidence):
     elif confidence >= 0.15 and confidence < 0.40:
             verdict = "Likely Fake"
     elif confidence >= 0.0 and confidence < 0.15:
-            verdict = "Highly Unreliable"
+            verdict = "Highly Unreliable(Most likely FAKE)"
 
     return {
         "label": label,
