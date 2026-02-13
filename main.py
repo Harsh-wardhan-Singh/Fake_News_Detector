@@ -5,21 +5,19 @@ from prediction_model_SVC import predict_news
 def format_result(label, confidence):
     confidence_percent = round(confidence * 100, 2)
 
-    if label == "REAL":
-        if confidence >= 0.85:
+    
+    if confidence >= 0.85:
             verdict = "Highly Reliable"
-        elif confidence >= 0.60:
+    elif confidence >= 0.60:
             verdict = "Likely Real "
-        else:
+    elif confidence >= 0.50 and confidence < 0.60:
             verdict = "Uncertain (but leaning towards REAL)"
-
-    else:  # FAKE
-        if confidence >= 0.85:
-            verdict = "Highly Suspicious"
-        elif confidence >= 0.60:
-            verdict = "Likely Fake"
-        else:
+    elif confidence >= 0.40 and confidence < 0.50:
             verdict = "Uncertain (but leaning towards FAKE)"
+    elif confidence >= 0.15 and confidence < 0.40:
+            verdict = "Likely Fake"
+    elif confidence >= 0.0 and confidence < 0.15:
+            verdict = "Highly Unreliable"
 
     return {
         "label": label,
