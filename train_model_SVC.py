@@ -67,6 +67,7 @@ try:
         df["text"], df["label"],
         test_size=TEST_SIZE,
         random_state=RANDOM_STATE,
+        shuffle=True,
         stratify=df["label"]
     )
 except ValueError:
