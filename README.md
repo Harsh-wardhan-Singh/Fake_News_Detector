@@ -257,6 +257,7 @@ gunicorn app:app
 - Add REST API for external integration
 - Add caching for repeated queries
 - Add user login / history tracking
+- Add the Ultimate Fake news dataset by huggingface to the training to make the model way more accurate but cant currently due to storage issues (9.25 M entries)
 
 ## Contact
 
