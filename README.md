@@ -1,17 +1,17 @@
 #  Fake News Detection System (AI-Powered Web App)
 
- **Live Demo:** https://fake-news-detector-bg89.onrender.com/  
+🔗 **Live Right Now:** https://fake-news-detector-bg89.onrender.com/  
 *(Click above to try the system in real time!)*
 
 ---
 
-##  Overview
+## 📌 Overview
 
 The **Fake News Detection System** is a full-stack machine learning web application designed to classify news headlines/text as **REAL** or **FAKE** using modern Natural Language Processing (NLP) and Machine Learning (ML) techniques.
 
 This project demonstrates a complete **end-to-end pipeline**:
 
- Data preprocessing → ML training → Model deployment → Interactive web interface
+📌 Data preprocessing → ML training → Model deployment → Interactive web interface
 
 It combines:
 - **Machine Learning** (TF-IDF + LinearSVC)
@@ -22,7 +22,7 @@ It combines:
 
 ---
 
-##  Motivation
+## 🎯 Motivation
 
 In today’s digital age, misinformation spreads rapidly through social platforms, blogs, and messaging channels, leading to confusion, fear, and societal discord. This project aims to:
 
@@ -33,7 +33,7 @@ In today’s digital age, misinformation spreads rapidly through social platform
 
 ---
 
-##  Architecture 
+## 🏗️ Architecture 
 
                    ┌────────────────┐
                    │   Web Browser  │
@@ -59,9 +59,9 @@ In today’s digital age, misinformation spreads rapidly through social platform
                    └────────────────┘
 ---
 
-##  Core Components
+## ⚙️ Core Components
 
-###  1. Data Collection & Cleaning
+### 📂 1. Data Collection & Cleaning
 
 Multiple CSV datasets were merged and preprocessed:
 - Fake vs Real datasets
@@ -81,7 +81,7 @@ The final merged dataset was filtered to remove:
 
 ---
 
-###  2. Feature Extraction (TF-IDF)
+### 🔍 2. Feature Extraction (TF-IDF)
 We use **Term Frequency–Inverse Document Frequency (TF-IDF)** to convert raw text into meaningful numeric vectors.
 
 Key settings:
@@ -101,7 +101,7 @@ This allows the model to capture both:
 
 - two-word combinations (bigrams)
 
-### 3. Machine Learning Model
+### 🤖 3. Machine Learning Model
 
 We used:
 
@@ -126,7 +126,7 @@ F1-Score ~0.94
 Recall ~0.92
 ```
 
-### 4. Model Deployment (Render.com)
+### ☁️ 4. Model Deployment (Render.com)
 
 The trained model and vectorizer are saved as:
 ```bash
@@ -142,7 +142,7 @@ Deployment manages:
 - Flask app hosting
 - Gunicorn web server
 
-## How It Works (User Flow)
+## 🔄 How It Works (User Flow)
 
 - User enters headline/text in search bar
 
@@ -163,7 +163,7 @@ Deployment manages:
 - Results displayed in UI
 
   
-## Confidence Interpretation
+## 📊 Confidence Interpretation
 
 Predictions include a confidence score between **0 and 1**, representing how confident the model is about its classification.
 
@@ -178,7 +178,7 @@ We categorize confidence into the following ranges:
 
 ---
 
-##  Example
+## 🧪 Example
 
 **Input:**  
 `"NASA confirms discovery of alien life"`
@@ -189,12 +189,12 @@ We categorize confidence into the following ranges:
 
 ---
 
- **Open the live site to try more!**  
+ 🌐 **Open the live site to try more!**  
  https://fake-news-detector-bg89.onrender.com/
 
 ---
 
-## Full Code Structure
+## 🗂️ Full Code Structure
 
 ```text
 project_root
@@ -214,7 +214,7 @@ project_root
 │   └── style.css
 └── README.md
 ```
-## Installation (Local Development)
+## 🛠️ Installation (Local Development)
 Clone Repository
 ```bash
 git clone https://github.com/yourusername/your-repo.git
@@ -235,7 +235,7 @@ Once running, open:
 ```text
 http://127.0.0.1:5000
 ```
-## Deployment
+## 🚀 Deployment
 
 This project is hosted using Render.com with the following configuration:
 
@@ -248,7 +248,7 @@ pip install -r requirements.txt
 ```bash
 gunicorn app:app
 ```
- The trained models are already included inside the repository, so no retraining is required after deployment.
+✅ The trained models are already included inside the repository, so no retraining is required after deployment.
 
 ## Future Improvements
 
@@ -260,15 +260,15 @@ gunicorn app:app
 - Add the Ultimate Fake news dataset by huggingface to the training to make the model way more accurate but cant currently due to storage issues (9.25 M entries)
 - Toggle for Ultra Precision using Deep Learing Transformers like BERT but cant currently due to slower processing speed
 
-## Contact
+## 📬 Contact
 
 Created by Harsh Wardhan Singh.
 Reach out on socials linked on the website.
 
-## Live Demo
+## 🌍 Live Demo
 
-Visit  https://fake-news-detector-bg89.onrender.com/
+Visit https://fake-news-detector-bg89.onrender.com/
 
 Try your own headlines!
 
-Thank you for using this project — Feedback and stars on GitHub are appreciated!
+⭐ Thank you for using this project — Feedback and stars on GitHub are appreciated!
