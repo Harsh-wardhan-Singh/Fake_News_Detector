@@ -1,5 +1,7 @@
 #  Fake News Detection System (AI-Powered Web App)
 
+![Website Preview](assets/website_preview.png)
+
 🔗 **Live Right Now:** https://fake-news-detector-bg89.onrender.com/  
 *(Click above to try the system in real time!)*
 
