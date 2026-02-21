@@ -1,8 +1,12 @@
 #  Fake News Detection System (AI-Powered Web App)
 
-![Website Preview](assets/website_preview.png)
+![Website Preview](assets/window_preview(1).png)
+![Website Preview](assets/window_preview(1).png)
+![Website Preview](assets/window_preview(3).png)
+![Website Preview](assets/window_preview(4).png)
 
-🔗 **Live Right Now:** https://fake-news-detector-bg89.onrender.com/  
+
+🔗 **Live Right Now:** https://geosheild.onrender.com) 
 *(Click above to try the system in real time!)*
 
 ---
@@ -269,7 +273,7 @@ Reach out on socials linked on the website.
 
 ## 🌍 Live Demo
 
-Visit https://fake-news-detector-bg89.onrender.com/
+Visit https://geosheild.onrender.com
 
 Try your own headlines!
 
